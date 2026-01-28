@@ -24,6 +24,10 @@ Profit?
 DM: Could maybe have different modes where different bitwise operators apply to falling digits, AND/OR/XOR etc.?
     Could also require player to make matching 2x2 blocks or similar to clear them compared to making complete lines?
 
+DP: I like the idea of the bit operators a lot. Also the suggestion that you have about the different combo blocks for clearing is neat too. That seems like the kind of thing that we could get the core in, and then playtest around with different mechanics to see which ones work and are fun.
+
+I think it could work quite well as a phone game where you interact with it through thumb at bottom of screen tracking left and right. Perhaps the speed of the ground moving could be analog - faster at the screen edges than towards the middle. I imagine that it could be something that rewards mastery, which would be pretty cool.
+
 ## Paint stencils
 
 More of a specific mechanic around painting which would build out into a little game/experience.
@@ -36,5 +40,7 @@ With a standard dual stick controller:
  Can move right stick up & down to shake can, then hold trigger to draw using use stencils.
 
  Not quite sure how that builds out into a fully featured game, but feels like could be quite a pleasing interaction. (Puzzles where you have to make a specific image with stencils? Just wandering around a space drawing things? Some light plot to tie things together?)
+
+ DP: Interesting. I had a not dissimilar idea that was a mix of the spray paint and masking tape. Kind of like those videos you sometimes see on the internet from street artists. I saw it as a VR game/experience. I can see how the dual sticks could work - makes me think a little of the game Baby Steps in that it could be quite awkward but you get used to it kind of way.
 
 
