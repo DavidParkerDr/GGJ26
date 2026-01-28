@@ -20,3 +20,21 @@ Something, something, maybe some kind of mechanism for clearing higher ground, p
 ...
 
 Profit?
+
+DM: Could maybe have different modes where different bitwise operators apply to falling digits, AND/OR/XOR etc.?
+    Could also require player to make matching 2x2 blocks or similar to clear them compared to making complete lines?
+
+## Paint stencils
+
+More of a specific mechanic around painting which would build out into a little game/experience.
+
+With a standard dual stick controller:
+ - Right stick controls a spray can held in one hand
+ - Left stick controls a stencil held in the other
+ - Right trigger to spray
+
+ Can move right stick up & down to shake can, then hold trigger to draw using use stencils.
+
+ Not quite sure how that builds out into a fully featured game, but feels like could be quite a pleasing interaction. (Puzzles where you have to make a specific image with stencils? Just wandering around a space drawing things? Some light plot to tie things together?)
+
+
