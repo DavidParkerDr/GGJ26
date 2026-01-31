@@ -62,7 +62,6 @@ func add_bit():
 	bits.add_child(bit)
 	
 func _on_bit_collide(falling, stationary):
-	print_debug(falling, stationary)
 	if (falling.isOne == stationary.isOne):
 		falling.queue_free()
 	
