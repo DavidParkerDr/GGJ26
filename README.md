@@ -28,7 +28,7 @@ DP: I like the idea of the bit operators a lot. Also the suggestion that you hav
 
 I think it could work quite well as a phone game where you interact with it through thumb at bottom of screen tracking left and right. Perhaps the speed of the ground moving could be analog - faster at the screen edges than towards the middle. I imagine that it could be something that rewards mastery, which would be pretty cool.
 
-![Work In Progress 1: ](/images/WIP_1.png "Work In Progress 1:")
+![Work In Progress 1: ](./images/WIP_1.png "Work In Progress 1:")
 
 ## Paint stencils
 
