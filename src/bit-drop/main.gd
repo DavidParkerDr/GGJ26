@@ -1,5 +1,6 @@
 extends Node
 
+@export var block_scene: PackedScene
 @export var bit_scene: PackedScene
 
 var size = Vector2(10, 20)
@@ -23,7 +24,6 @@ func _ready() -> void:
 		bit.position.x = i * bit_width
 		
 		bit.isOne = false
-		bit.isFalling = false
 		bit.add_to_group("bitmap")
 		
 		mask.add_child(bit)
@@ -70,7 +70,7 @@ func move(dx):
 			bit.position.x = bit_width * (size.x - 1)
 
 func _on_tick_timer_timeout() -> void:
-	add_bit()
+	#add_bit()
 	add_block([true, false, true])
 	
 func move_bits(delta: float):
@@ -78,7 +78,9 @@ func move_bits(delta: float):
 		pass
 	
 func add_block(pattern: Array[bool]):
-	var block = Node2D.new()
+	var block = block_scene.instantiate()
+	block.position.x = randi_range(0, size.x - pattern.size()) * bit_width
+	block.block_collide.connect(_on_block_collide)
 	
 	for i in pattern.size():
 		var bit = bit_scene.instantiate()
@@ -86,6 +88,8 @@ func add_block(pattern: Array[bool]):
 		bit.position.x = i * bit_width
 		
 		block.add_child(bit)
+		
+	$Bits.add_child(block)
 	
 func add_bit():
 	var bit = bit_scene.instantiate()
@@ -93,21 +97,33 @@ func add_bit():
 	bit.position.y = -bit_width
 	bit.position.x = randi_range(0, size.x - 1) * bit_width
 	
-	bit.bit_collide.connect(_on_bit_collide)
-	
 	bits.add_child(bit)
 	
-func _on_bit_collide(falling, stationary):
-	
+
+func _on_block_collide(block, block_bit, mask_bit):
 	sfx.play_hit()
+		
+	if (block_bit.isOne == mask_bit.isOne):
+		block_bit.queue_free()
+	else:
+		block.isFalling = false
+		block.position.x = snapped(block.position.x, bit_width)
+		block.position.y = snapped(block.position.y, bit_width)
+			
+		for bit in block.get_children():
+			bit.add_to_group("bitmap")
+			bit.remove_from_group("falling")
+			
+			bit.reparent($Mask)
+			
+		block.queue_free()
+		
+		
+	#
+	#falling.add_to_group("bitmap")
+	#falling.remove_from_group("falling")
 	
-	if (falling.isOne == stationary.isOne):
-		falling.queue_free()
+	#falling.isFalling = false
 	
-	falling.add_to_group("bitmap")
-	falling.remove_from_group("falling")
-	
-	falling.isFalling = false
-	
-	falling.position.x = snapped(falling.position.x, bit_width)
-	falling.position.y = snapped(falling.position.y, bit_width)
+	#falling.position.x = snapped(falling.position.x, bit_width)
+	#falling.position.y = snapped(falling.position.y, bit_width)
