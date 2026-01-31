@@ -14,7 +14,10 @@ func _ready() -> void:
 	for i in range(0, size.x):
 		var bit = bit_scene.instantiate()
 		bit.position.x = i * bit_width
-		bit.isOne = i % 2 == 0
+		
+		bit.isOne = false
+		bit.isFalling = false
+		bit.add_to_group("bitmap")
 		
 		mask.add_child(bit)
 
@@ -22,28 +25,48 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("move_left"):
-		pass
+		move(-1)
 	elif Input.is_action_just_pressed("move_right"):
-		pass
+		move(1)
 		
+	move_bits(delta)
+	
 	pass
 
+func move(dx):
+	var bits = get_tree().get_nodes_in_group("bitmap")
+	for bit in bits:
+		bit.position.x += dx * bit_width
+		
+		if bit.position.x > (size.x - 1) * bit_width:
+			bit.position.x = 0
+			
+		if bit.position.x < 0:
+			bit.position.x = bit_width * (size.x - 1)
 
 func _on_tick_timer_timeout() -> void:
-	move_bits()
-	
 	add_bit()
 	
-func move_bits():
+func move_bits(delta: float):
 	for bit in bits.get_children():
-		bit.position.y += bit_width
-
-
+		pass
 	
 func add_bit():
 	var bit = bit_scene.instantiate()
 	bit.isOne = randf() > 0.5
-	
+	bit.position.y = -bit_width
 	bit.position.x = randi_range(0, size.x - 1) * bit_width
 	
+	bit.bit_collide.connect(_on_bit_collide)
+	
 	bits.add_child(bit)
+	
+func _on_bit_collide(falling, stationary):
+	print_debug(falling, stationary)
+	if (falling.isOne == stationary.isOne):
+		falling.queue_free()
+	
+	falling.add_to_group("bitmap")
+	falling.remove_from_group("falling")
+	
+	falling.isFalling = false
