@@ -11,6 +11,9 @@ var viewport_size: Vector2
 @onready var mask = $Mask
 @onready var bits = $Bits
 
+@onready var music := $MusicPayer
+@onready var sfx := $SfxPlayer
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	viewport_size = get_viewport().size
@@ -95,6 +98,9 @@ func add_bit():
 	bits.add_child(bit)
 	
 func _on_bit_collide(falling, stationary):
+	
+	sfx.play_hit()
+	
 	if (falling.isOne == stationary.isOne):
 		falling.queue_free()
 	
