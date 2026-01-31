@@ -2,6 +2,9 @@ extends Node
 
 @export var bit_scene: PackedScene
 
+@onready var music := $MusicPlayer
+@onready var sfx := $SfxPlayer
+
 var size = Vector2(10, 20)
 
 var bit_width = 50
@@ -11,6 +14,9 @@ var bit_width = 50
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	music.set_mood(music.Mood.RELAXED)
+	sfx.play_game_over()
+	
 	for i in range(0, size.x):
 		var bit = bit_scene.instantiate()
 		bit.position.x = i * bit_width
@@ -62,6 +68,8 @@ func add_bit():
 	bits.add_child(bit)
 	
 func _on_bit_collide(falling, stationary):
+	
+	sfx.play_hit()
 	if (falling.isOne == stationary.isOne):
 		falling.queue_free()
 	

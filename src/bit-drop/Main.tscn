@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://hodb531de4k4" path="res://Assets/spooky elephant logo vector.svg" id="2_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://b2ltp04bko8ao" path="res://Bit.tscn" id="2_r0du0"]
 [ext_resource type="Theme" uid="uid://264gdyjhaan4" path="res://Assets/default_theme.tres" id="4_cm0pq"]
+[ext_resource type="Script" uid="uid://b01wjiugrl32t" path="res://Assets/audio/RubberSynth.gd" id="5_3dxm6"]
+[ext_resource type="Script" uid="uid://dte7mkgm33hcf" path="res://Assets/audio/SfxSynth.gd" id="6_lgr22"]
 
 [node name="Main" type="Node" unique_id=1869880820]
 script = ExtResource("1_uu6xs")
@@ -49,5 +51,13 @@ offset_bottom = 120.0
 theme = ExtResource("4_cm0pq")
 theme_override_font_sizes/font_size = 100
 text = "Bit Drop"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1299157291]
+bus = &"Music"
+script = ExtResource("5_3dxm6")
+
+[node name="SfxPlayer" type="AudioStreamPlayer" parent="." unique_id=749204674]
+bus = &"Sfx"
+script = ExtResource("6_lgr22")
 
 [connection signal="timeout" from="TickTimer" to="." method="_on_tick_timer_timeout"]
