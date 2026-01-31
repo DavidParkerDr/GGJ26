@@ -36,6 +36,16 @@ func _unhandled_input(event):
 		elif event.position.x > 2 * (viewport_size.x / 3):
 			Input.action_press("move_right")
 
+	if event is InputEventMouseButton:
+		
+		Input.action_release("move_left")
+		Input.action_release("move_right")
+			
+		if event.position.x < viewport_size.x / 2:
+			Input.action_press('move_left')
+		elif event.position.x > (viewport_size.x / 2):
+			Input.action_press("move_right")
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("move_left"):
