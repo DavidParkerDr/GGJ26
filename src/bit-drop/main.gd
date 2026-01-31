@@ -2,20 +2,18 @@ extends Node
 
 @export var bit_scene: PackedScene
 
-@onready var music := $MusicPlayer
-@onready var sfx := $SfxPlayer
-
 var size = Vector2(10, 20)
 
 var bit_width = 50
+
+var viewport_size: Vector2
 
 @onready var mask = $Mask
 @onready var bits = $Bits
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	music.set_mood(music.Mood.RELAXED)
-	sfx.play_game_over()
+	viewport_size = get_viewport().size
 	
 	for i in range(0, size.x):
 		var bit = bit_scene.instantiate()
@@ -26,7 +24,25 @@ func _ready() -> void:
 		bit.add_to_group("bitmap")
 		
 		mask.add_child(bit)
+		
+func handle_input(location):
+	Input.action_release("move_left")
+	Input.action_release("move_right")
+			
+	if location < viewport_size.x / 2:
+		Input.action_press('move_left')
+	elif location > (viewport_size.x / 2):
+		Input.action_press("move_right")
+			
+func _unhandled_input(event):
+	if event is InputEventScreenTouch:
+		if event.is_pressed():
+			handle_input(event.position.x)
 
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			handle_input(event.position.x)
+		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -52,10 +68,21 @@ func move(dx):
 
 func _on_tick_timer_timeout() -> void:
 	add_bit()
+	add_block([true, false, true])
 	
 func move_bits(delta: float):
 	for bit in bits.get_children():
 		pass
+	
+func add_block(pattern: Array[bool]):
+	var block = Node2D.new()
+	
+	for i in pattern.size():
+		var bit = bit_scene.instantiate()
+		bit.isOne = pattern[i]
+		bit.position.x = i * bit_width
+		
+		block.add_child(bit)
 	
 func add_bit():
 	var bit = bit_scene.instantiate()
@@ -68,8 +95,6 @@ func add_bit():
 	bits.add_child(bit)
 	
 func _on_bit_collide(falling, stationary):
-	
-	sfx.play_hit()
 	if (falling.isOne == stationary.isOne):
 		falling.queue_free()
 	
