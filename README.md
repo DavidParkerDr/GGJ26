@@ -1,6 +1,9 @@
 # GGJ26
 Repository for our Global Game Jam 26 game
 
+# Bit Drop
+A web playable version of [Bit Drop](https://davidparkerdr.github.io/GGJ26/Game/).
+
 # Ideas
 ## Bit Masking
 The idea is obviously centred around the concept of bit masking.
