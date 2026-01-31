@@ -4,44 +4,38 @@
 [ext_resource type="Texture2D" uid="uid://hodb531de4k4" path="res://Assets/spooky elephant logo vector.svg" id="2_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://b2ltp04bko8ao" path="res://Bit.tscn" id="2_r0du0"]
 
-[node name="Node2D" type="Node2D" unique_id=1523357558]
+[node name="Main" type="Node" unique_id=1869880820]
 script = ExtResource("1_uu6xs")
+bit_scene = ExtResource("2_r0du0")
 
 [node name="BG" type="ColorRect" parent="." unique_id=1703853073]
 offset_right = 399.0
 offset_bottom = 596.0
+scale = Vector2(1.7928231, 2.135674)
 color = Color(0, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=14022925]
-position = Vector2(365.00003, 49.999996)
+position = Vector2(674, 68)
 scale = Vector2(0.10517361, 0.1185744)
 texture = ExtResource("2_cm0pq")
 
 [node name="PlayArea" type="ColorRect" parent="." unique_id=301627079]
-offset_left = 5.0
-offset_top = 66.0
-offset_right = 395.0
-offset_bottom = 536.0
+offset_left = 45.0
+offset_top = 135.0
+offset_right = 545.0
+offset_bottom = 1135.0
 color = Color(0.34220693, 0.34220695, 0.3422069, 1)
+metadata/_edit_lock_ = true
 
 [node name="Logo" type="Node2D" parent="." unique_id=1869635937]
 
-[node name="Bits" type="Node2D" parent="." unique_id=299469489]
+[node name="Mask" type="Node2D" parent="." unique_id=299469489]
+position = Vector2(45, 1135)
 
-[node name="Node2D4" parent="Bits" unique_id=1222030871 instance=ExtResource("2_r0du0")]
-position = Vector2(22, 488)
-
-[node name="Node2D5" parent="Bits" unique_id=2039817273 instance=ExtResource("2_r0du0")]
-position = Vector2(71, 487)
-
-[node name="Node2D" parent="Bits" unique_id=1869920207 instance=ExtResource("2_r0du0")]
-position = Vector2(319, 457)
-
-[node name="Node2D2" parent="Bits" unique_id=1195752962 instance=ExtResource("2_r0du0")]
-position = Vector2(118, 487)
-
-[node name="Node2D3" parent="Bits" unique_id=1294516838 instance=ExtResource("2_r0du0")]
-position = Vector2(288, 457)
+[node name="Bits" type="Node2D" parent="." unique_id=1314198084]
+position = Vector2(45, 135)
 
 [node name="TickTimer" type="Timer" parent="." unique_id=575874012]
 autostart = true
