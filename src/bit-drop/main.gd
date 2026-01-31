@@ -69,3 +69,6 @@ func _on_bit_collide(falling, stationary):
 	falling.remove_from_group("falling")
 	
 	falling.isFalling = false
+	
+	falling.position.x = snapped(falling.position.x, bit_width)
+	falling.position.y = snapped(falling.position.y, bit_width)
