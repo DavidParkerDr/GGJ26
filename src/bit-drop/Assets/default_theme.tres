@@ -1,0 +1,6 @@
+[gd_resource type="Theme" format=3 uid="uid://264gdyjhaan4"]
+
+[ext_resource type="FontFile" uid="uid://dte26e3bunr51" path="res://Assets/Seven Segment.ttf" id="1_j6874"]
+
+[resource]
+default_font = ExtResource("1_j6874")
