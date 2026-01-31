@@ -9,6 +9,10 @@ var bit_width = 50
 
 var viewport_size: Vector2
 
+var score = 0
+var level = 1
+var blocks_dropped = 0
+
 @onready var mask = $Mask
 @onready var bits = $Bits
 
@@ -56,6 +60,9 @@ func _process(delta: float) -> void:
 		
 	move_bits(delta)
 	
+	$LevelValue.text = str(level)
+	$ScoreValue.text = str(score)
+	
 	pass
 
 func move(dx):
@@ -70,7 +77,6 @@ func move(dx):
 			bit.position.x = bit_width * (size.x - 1)
 
 func _on_tick_timer_timeout() -> void:
-	#add_bit()
 	add_block([true, false, true])
 	
 func move_bits(delta: float):
@@ -78,6 +84,8 @@ func move_bits(delta: float):
 		pass
 	
 func add_block(pattern: Array[bool]):
+	blocks_dropped += 1
+	
 	var block = block_scene.instantiate()
 	block.position.x = randi_range(0, size.x - pattern.size()) * bit_width
 	block.block_collide.connect(_on_block_collide)
@@ -99,12 +107,12 @@ func add_bit():
 	
 	bits.add_child(bit)
 	
-
 func _on_block_collide(block, block_bit, mask_bit):
 	sfx.play_hit()
 		
 	if (block_bit.isOne == mask_bit.isOne):
 		block_bit.queue_free()
+		score += 10
 	else:
 		block.isFalling = false
 		block.position.x = snapped(block.position.x, bit_width)

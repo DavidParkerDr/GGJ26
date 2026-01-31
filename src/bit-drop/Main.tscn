@@ -23,7 +23,7 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=14022925]
-position = Vector2(674, 68)
+position = Vector2(666.00006, 68)
 scale = Vector2(0.10517361, 0.1185744)
 texture = ExtResource("2_cm0pq")
 
@@ -63,5 +63,45 @@ script = ExtResource("5_3dxm6")
 [node name="SfxPlayer" type="AudioStreamPlayer" parent="." unique_id=749204674]
 bus = &"Sfx"
 script = ExtResource("6_lgr22")
+
+[node name="LevelLabel" type="Label" parent="." unique_id=704492817]
+offset_left = 564.0
+offset_top = 135.0
+offset_right = 666.0
+offset_bottom = 180.0
+theme = ExtResource("4_cm0pq")
+theme_override_font_sizes/font_size = 42
+text = "Level"
+horizontal_alignment = 2
+
+[node name="LevelValue" type="Label" parent="." unique_id=565841979]
+offset_left = 621.0
+offset_top = 180.0
+offset_right = 668.0
+offset_bottom = 225.0
+size_flags_horizontal = 8
+theme = ExtResource("4_cm0pq")
+theme_override_font_sizes/font_size = 42
+text = "99"
+horizontal_alignment = 2
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=834564423]
+offset_left = 564.0
+offset_top = 237.0
+offset_right = 665.0
+offset_bottom = 282.0
+theme = ExtResource("4_cm0pq")
+theme_override_font_sizes/font_size = 42
+text = "Score"
+
+[node name="ScoreValue" type="Label" parent="." unique_id=1712783946]
+offset_left = 582.0
+offset_top = 287.0
+offset_right = 666.0
+offset_bottom = 332.0
+theme = ExtResource("4_cm0pq")
+theme_override_font_sizes/font_size = 42
+text = "9999"
+horizontal_alignment = 2
 
 [connection signal="timeout" from="TickTimer" to="." method="_on_tick_timer_timeout"]
