@@ -24,27 +24,25 @@ func _ready() -> void:
 		bit.add_to_group("bitmap")
 		
 		mask.add_child(bit)
-
+		
+func handle_input(location):
+	Input.action_release("move_left")
+	Input.action_release("move_right")
+			
+	if location < viewport_size.x / 2:
+		Input.action_press('move_left')
+	elif location > (viewport_size.x / 2):
+		Input.action_press("move_right")
+			
 func _unhandled_input(event):
 	if event is InputEventScreenTouch:
-		if event.is_released():
-			Input.action_release("move_left")
-			Input.action_release("move_right")
-			
-		if event.position.x < viewport_size.x / 3:
-			Input.action_press('move_left')
-		elif event.position.x > 2 * (viewport_size.x / 3):
-			Input.action_press("move_right")
+		if event.is_pressed():
+			handle_input(event.position.x)
 
 	if event is InputEventMouseButton:
+		if event.is_pressed():
+			handle_input(event.position.x)
 		
-		Input.action_release("move_left")
-		Input.action_release("move_right")
-			
-		if event.position.x < viewport_size.x / 2:
-			Input.action_press('move_left')
-		elif event.position.x > (viewport_size.x / 2):
-			Input.action_press("move_right")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
