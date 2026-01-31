@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cyc30pt6xptps"]
+
+[node name="Node2D" type="Node2D" unique_id=1523357558]
+
+[node name="BG" type="ColorRect" parent="." unique_id=1703853073]
+offset_right = 804.0
+offset_bottom = 600.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayArea" type="ColorRect" parent="." unique_id=301627079]
+offset_left = 265.0
+offset_top = 68.0
+offset_right = 570.0
+offset_bottom = 526.0
+color = Color(0.34220693, 0.34220695, 0.3422069, 1)
