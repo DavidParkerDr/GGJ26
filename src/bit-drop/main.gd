@@ -6,11 +6,15 @@ var size = Vector2(10, 20)
 
 var bit_width = 50
 
+var viewport_size: Vector2
+
 @onready var mask = $Mask
 @onready var bits = $Bits
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	viewport_size = get_viewport().size
+	
 	for i in range(0, size.x):
 		var bit = bit_scene.instantiate()
 		bit.position.x = i * bit_width
@@ -21,6 +25,16 @@ func _ready() -> void:
 		
 		mask.add_child(bit)
 
+func _unhandled_input(event):
+	if event is InputEventScreenTouch:
+		if event.is_released():
+			Input.action_release("move_left")
+			Input.action_release("move_right")
+			
+		if event.position.x < viewport_size.x / 3:
+			Input.action_press('move_left')
+		elif event.position.x > 2 * (viewport_size.x / 3):
+			Input.action_press("move_right")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -46,10 +60,21 @@ func move(dx):
 
 func _on_tick_timer_timeout() -> void:
 	add_bit()
+	add_block([true, false, true])
 	
 func move_bits(delta: float):
 	for bit in bits.get_children():
 		pass
+	
+func add_block(pattern: Array[bool]):
+	var block = Node2D.new()
+	
+	for i in pattern.size():
+		var bit = bit_scene.instantiate()
+		bit.isOne = pattern[i]
+		bit.position.x = i * bit_width
+		
+		block.add_child(bit)
 	
 func add_bit():
 	var bit = bit_scene.instantiate()
