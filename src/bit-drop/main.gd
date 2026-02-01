@@ -111,13 +111,14 @@ func update_score(amount):
 		level = floor(score / score_per_level) + 1
 	
 func _on_block_collide(block, block_bit, mask_bit):
-	sfx.play_hit()
 		
 	if (block_bit.isOne == mask_bit.isOne):
 		block_bit.queue_free()
 		update_score(10)
+		sfx.play_hit()
 	
 	else:
+		sfx.play_miss()
 		block.isFalling = false
 		block.position.x = snapped(block.position.x, bit_width)
 		block.position.y = snapped(block.position.y, bit_width)
