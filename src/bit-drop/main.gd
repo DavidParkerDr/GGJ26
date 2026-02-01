@@ -7,6 +7,12 @@ const STATE_ATTRACT = 'Attract'
 const STATE_RUNNING = 'Running'
 const STATE_GAME_OVER = 'GameOver'
 
+const OPERATOR_EQUAL = 'Equal'
+const OPERATOR_NOT_EQUAL = 'NotEqual'
+const OPERATOR_OR = 'Or'
+const OPERATOR_AND = 'And'
+const OPERATOR_XOR = 'Xor'
+
 var state = STATE_ATTRACT
 
 var size = Vector2(10, 20)
@@ -60,10 +66,40 @@ func _unhandled_input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	update_falling_blocks(delta)
+		
+	check_game_over()
+		
+	if state == STATE_RUNNING:
+		# Handle input
+		if Input.is_action_just_pressed("move_left"):
+			move(-1)
+		elif Input.is_action_just_pressed("move_right"):
+			move(1)
+	elif state == STATE_ATTRACT:
+		if Input.is_action_just_pressed("start"):
+			handle_game_start()
+	
+	# Update UI
+	$LevelValue.text = str(level)
+	$ScoreValue.text = str(score)
+	
+	if state == STATE_ATTRACT:
+		$MessageLabel.text = 'Tap to start!'
+	elif state == STATE_GAME_OVER:
+		$MessageLabel.text = 'Game over!'
+		
+	$MessageLabel.visible = state == STATE_ATTRACT or state == STATE_GAME_OVER
+
+func update_falling_blocks(delta: float):
 	# Update falling blocks
 	for block in bits.get_children():
 		if !block.isFalling:
 			continue
+		
+		# Remove blocks which have left the screen
+		if block.position.y > viewport_size.y:
+			block.queue_free()
 			
 		# Check if block crossing to next row
 		var curr_grid_pos = canvas_position_to_grid(block.position)
@@ -101,70 +137,72 @@ func _process(delta: float) -> void:
 				return r[1] != null && r[0].isOne == r[1].isOne
 		)
 		
-		# If all bits are either matching or non-colliding, remove matching,
-		# let non-colliding continue
-		if non_colliding.size() + matching_bits.size() == bits_collided.size():
-			for bit in matching_bits:
-				# Remove falling bit
-				bit[0].queue_free()
+		# If we're landing on the mask
+		if next_grid_pos.y == 0:
+			# If all the bits in the block match
+			if matching_bits.size() == bits_collided.size():
+				# Allow to fall through, increase score
+				update_score(10 * bits_collided.size())
+			else:
+				for bit_idx in range(0, bits_collided.size()):
+					var bit = bits_collided[bit_idx][0]
+					var next_bit_pos = curr_grid_pos + Vector2i(bit_idx, 0)
+					
+					set_bit(next_bit_pos.x, next_bit_pos.y, bit)
+					
+					bit.add_to_group("bitmap")
+					bit.remove_from_group("falling")
+					bit.operator = 'None'
+					bit.reparent($Mask)
+					
+			for bit_idx in range(0, bits_collided.size()):
+				var bits = bits_collided[bit_idx]
+				var falling_bit = bits[0]
+				var mask_bit = bits[1]
+				mask_bit.isOne = apply_operator(block.operator, falling_bit.isOne, mask_bit.isOne)
 				
-				# Remove bit from map
-				remove_bit_from_map(bit[2])
-				
-			update_score(10 * matching_bits.size())
-				
-			for bit in non_colliding:
-				var new_block = block_scene.instantiate();
-				
-				new_block.position = next_canvas_pos + bit[0].position
-
-				# TODO: Merge bits into blocks instead of creating block/bit
-				
-				bit[0].reparent(new_block)
-				bit[0].position = Vector2(0, 0)
-				bits.add_child(new_block)
 		else:
-			var block_bits = block.get_children()
-			
-			sfx.play_miss()
-			streak_length = 0
+			# If all bits are either matching or non-colliding, remove matching,
+			# let non-colliding continue
+			if non_colliding.size() + matching_bits.size() == bits_collided.size():
+				for bit in matching_bits:
+					# Remove falling bit
+					bit[0].queue_free()
+					
+					# Remove bit from map
+					remove_bit_from_map(bit[2])
+					
+				#update_score(10 * matching_bits.size())
+					
+				for bit in non_colliding:
+					var new_block = block_scene.instantiate();
+					
+					new_block.position = next_canvas_pos + bit[0].position
 
-			for bit_idx in range(0, block_bits.size()):
-				var bit = block_bits[bit_idx]
-				var next_bit_pos = curr_grid_pos + Vector2i(bit_idx, 0)
+					# TODO: Merge bits into blocks instead of creating block/bit
+					
+					bit[0].reparent(new_block)
+					bit[0].position = Vector2(0, 0)
+					bits.add_child(new_block)
+			else:
+				var block_bits = block.get_children()
 				
-				set_bit(next_bit_pos.x, next_bit_pos.y, bit)
-				
-				bit.add_to_group("bitmap")
-				bit.remove_from_group("falling")
-				
-				bit.reparent($Mask)
-				
+				sfx.play_miss()
+				streak_length = 0
+
+				for bit_idx in range(0, block_bits.size()):
+					var bit = block_bits[bit_idx]
+					var next_bit_pos = curr_grid_pos + Vector2i(bit_idx, 0)
+					
+					set_bit(next_bit_pos.x, next_bit_pos.y, bit)
+					
+					bit.add_to_group("bitmap")
+					bit.remove_from_group("falling")
+					bit.operator = 'None'
+					bit.reparent($Mask)
+					
 		block.queue_free()
 		
-	check_game_over()
-		
-	if state == STATE_RUNNING:
-		# Handle input
-		if Input.is_action_just_pressed("move_left"):
-			move(-1)
-		elif Input.is_action_just_pressed("move_right"):
-			move(1)
-	elif state == STATE_ATTRACT:
-		if Input.is_action_just_pressed("start"):
-			handle_game_start()
-	
-	# Update UI
-	$LevelValue.text = str(level)
-	$ScoreValue.text = str(score)
-	
-	if state == STATE_ATTRACT:
-		$MessageLabel.text = 'Tap to start!'
-	elif state == STATE_GAME_OVER:
-		$MessageLabel.text = 'Game over!'
-		
-	$MessageLabel.visible = state == STATE_ATTRACT or state == STATE_GAME_OVER
-
 func move(dx):
 	var new_map: Array[Array] = []
 	
@@ -216,14 +254,21 @@ func add_block(pattern: Array[bool]):
 	blocks_dropped += 1
 	
 	var block = block_scene.instantiate()
-	block.speed = 200 + randi_range(-30, 30)
+	block.speed = 200
 	block.position.x = randi_range(0, size.x - pattern.size()) * bit_width
 	
+	if blocks_dropped > 20:
+		if randi_range(0, 1) == 0:
+			block.operator = OPERATOR_NOT_EQUAL
+		else:
+			block.operator = OPERATOR_EQUAL
+			
 	for i in pattern.size():
 		var bit = bit_scene.instantiate()
 		bit.isOne = pattern[i]
 		bit.position.x = i * bit_width
-		
+		bit.operator = block.operator
+				
 		block.add_child(bit)
 		
 	$Bits.add_child(block)
@@ -278,17 +323,16 @@ func handle_game_over():
 	if state == STATE_GAME_OVER:
 		return
 		
-	state = STATE_GAME_OVER
-	$GameoverTimer.start()
-	
 	jingle.play_game_over_sad()
 	
-func _on_gameover_timer_timeout() -> void:
+	state = STATE_GAME_OVER
+	$GameoverTimer.start()
+	await $GameoverTimer.timeout
+	
 	reset_map()
 	
 	handle_attract()
-	
-	
+
 func reset_map():
 	bits_map = []
 	for node in get_tree().get_nodes_in_group('bitmap'):
@@ -303,6 +347,7 @@ func reset_map():
 		bit.position.x = i * bit_width
 		
 		bit.isOne = false
+		bit.operator = 'None'
 		bit.add_to_group("bitmap")
 		bits_column[0] = bit
 		
@@ -319,3 +364,17 @@ func canvas_position_to_grid(pos: Vector2) -> Vector2i:
 	var block_map_y = size.y - ceil(pos.y / bit_width)
 	
 	return Vector2i(block_map_x, block_map_y)
+
+func apply_operator(operator: String, a: bool, b: bool) -> bool:
+	if (operator == OPERATOR_EQUAL):
+		return a == b
+	if (operator == OPERATOR_NOT_EQUAL):
+		return a != b
+	if (operator == OPERATOR_OR):
+		return a || b
+	if (operator == OPERATOR_AND):
+		return a && b
+	if (operator == OPERATOR_XOR):
+		return (a || b) && !(a && b)
+		
+	return false

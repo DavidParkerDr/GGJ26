@@ -3,7 +3,7 @@ extends Node2D
 var speed = 200
 var isFalling = true
 
-signal block_collide(block, block_bit, mask_bit) 
+var operator = 'Equal'
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

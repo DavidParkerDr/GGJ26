@@ -131,4 +131,3 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="timeout" from="AddBlockTimer" to="." method="_on_tick_timer_timeout"]
-[connection signal="timeout" from="GameoverTimer" to="." method="_on_gameover_timer_timeout"]
