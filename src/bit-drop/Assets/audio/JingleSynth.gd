@@ -132,6 +132,24 @@ func play_game_start() -> void:
 
 	_start()
 
+func play_game_over_sad() -> void:
+	# Sad descending stinger (~2–3s incl. release/verb)
+	# Uses minor-ish contour; rests give it that "sigh".
+	root_midi = default_root_midi - 7  # drop it a bit so it feels more sombre
+
+	notes = PackedInt32Array([
+		12, 10, 7, -999,
+		7, 3, 0, -999,
+		-5
+	])
+
+	durs = PackedFloat32Array([
+		0.18, 0.18, 0.22, 0.10,
+		0.18, 0.20, 0.26, 0.10,
+		0.70
+	])
+
+	_start()
 
 # Stop immediately (with a short release)
 func stop_jingle() -> void:
@@ -284,3 +302,5 @@ func _unhandled_input(event: InputEvent) -> void:
 			play_skill_move()
 		KEY_5:
 			play_game_start()
+		KEY_6:
+			play_game_over_sad()

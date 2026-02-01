@@ -16,6 +16,7 @@ var score = 0
 var level = 1
 var blocks_dropped = 0
 var score_per_level = 100
+var streak_length=0
 
 @onready var mask = $Mask
 @onready var bits = $Bits
@@ -116,9 +117,16 @@ func _on_block_collide(block, block_bit, mask_bit):
 		block_bit.queue_free()
 		update_score(10)
 		sfx.play_hit()
-	
+		streak_length = streak_length+1
+		if (streak_length==3):
+			jingle.play_bonus()
+		if (streak_length==6):
+			jingle.play_power_up()			
+		if (streak_length==10):
+			jingle.play_level_complete()			
 	else:
 		sfx.play_miss()
+		streak_length=0
 		block.isFalling = false
 		block.position.x = snapped(block.position.x, bit_width)
 		block.position.y = snapped(block.position.y, bit_width)
@@ -139,6 +147,7 @@ func check_game_over():
 			
 func handle_game_over():
 	state = "GameOver"
+	jingle.play
 	
 func get_block(x: int, y: int):
 	return blocks[x + y * size.y]
