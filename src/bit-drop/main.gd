@@ -3,10 +3,11 @@ extends Node
 @export var block_scene: PackedScene
 @export var bit_scene: PackedScene
 
+const STATE_ATTRACT = 'Attract'
 const STATE_RUNNING = 'Running'
 const STATE_GAME_OVER = 'GameOver'
 
-var state = STATE_RUNNING
+var state = STATE_ATTRACT
 
 var size = Vector2(10, 20)
 var bits_map: Array[Array] = []
@@ -32,28 +33,20 @@ var streak_length = 0
 func _ready() -> void:
 	viewport_size = get_viewport().size
 	
-	for i in range(0, size.x):
-		var bits_column = []
-		bits_column.resize(size.y + 1) # Extra row for mask
-		bits_map.append(bits_column)
-		
-		var bit = bit_scene.instantiate()
-		bit.position.x = i * bit_width
-		
-		bit.isOne = false
-		bit.add_to_group("bitmap")
-		bits_column[0] = bit
-		
-		mask.add_child(bit)
+	reset_map()
 		
 func handle_input(location):
 	Input.action_release("move_left")
 	Input.action_release("move_right")
-			
-	if location < viewport_size.x / 2:
-		Input.action_press('move_left')
-	elif location > (viewport_size.x / 2):
-		Input.action_press("move_right")
+	Input.action_release("start")
+	
+	if state == STATE_RUNNING:				
+		if location < viewport_size.x / 2:
+			Input.action_press('move_left')
+		elif location > (viewport_size.x / 2):
+			Input.action_press("move_right")
+	else:
+		Input.action_press("start")
 			
 func _unhandled_input(event):
 	if state == STATE_RUNNING:
@@ -157,10 +150,20 @@ func _process(delta: float) -> void:
 			move(-1)
 		elif Input.is_action_just_pressed("move_right"):
 			move(1)
+	elif state == STATE_ATTRACT:
+		if Input.is_action_just_pressed("start"):
+			handle_game_start()
 	
 	# Update UI
 	$LevelValue.text = str(level)
 	$ScoreValue.text = str(score)
+	
+	if state == STATE_ATTRACT:
+		$MessageLabel.text = 'Tap to start!'
+	elif state == STATE_GAME_OVER:
+		$MessageLabel.text = 'Game over!'
+		
+	$MessageLabel.visible = state == STATE_ATTRACT or state == STATE_GAME_OVER
 
 func move(dx):
 	var new_map: Array[Array] = []
@@ -206,11 +209,14 @@ func _on_tick_timer_timeout() -> void:
 			bits.append(randi_range(0, 1) == 0)
 			
 		add_block(bits)
+		
+		$AddBlockTimer.wait_time = 0.5 + maxf(0, 1 - blocks_dropped * 0.01) + randf_range(-0.2, 0.2)
 	
 func add_block(pattern: Array[bool]):
 	blocks_dropped += 1
 	
 	var block = block_scene.instantiate()
+	block.speed = 200 + randi_range(-30, 30)
 	block.position.x = randi_range(0, size.x - pattern.size()) * bit_width
 	
 	for i in pattern.size():
@@ -255,10 +261,52 @@ func check_game_over():
 			handle_game_over()
 			break
 			
+func handle_attract():
+	state = STATE_ATTRACT
+			
+func handle_game_start():
+	state = STATE_RUNNING
+	
+	jingle.play_game_start()
+	reset_map()
+	
+	score = 0
+	level = 1
+	blocks_dropped = 0
+			
 func handle_game_over():
+	if state == STATE_GAME_OVER:
+		return
+		
 	state = STATE_GAME_OVER
+	$GameoverTimer.start()
 	
 	jingle.play_game_over_sad()
+	
+func _on_gameover_timer_timeout() -> void:
+	reset_map()
+	
+	handle_attract()
+	
+	
+func reset_map():
+	bits_map = []
+	for node in get_tree().get_nodes_in_group('bitmap'):
+		node.queue_free()
+	
+	for i in range(0, size.x):
+		var bits_column = []
+		bits_column.resize(size.y + 1) # Extra row for mask
+		bits_map.append(bits_column)
+		
+		var bit = bit_scene.instantiate()
+		bit.position.x = i * bit_width
+		
+		bit.isOne = false
+		bit.add_to_group("bitmap")
+		bits_column[0] = bit
+		
+		mask.add_child(bit)
 	
 func get_bit(x: int, y: int):
 	return bits_map[x][y]
