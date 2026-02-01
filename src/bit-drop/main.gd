@@ -3,7 +3,10 @@ extends Node
 @export var block_scene: PackedScene
 @export var bit_scene: PackedScene
 
+var state = 'Running'
+
 var size = Vector2(10, 20)
+var blocks: Array[Node2D] = []
 
 var bit_width = 50
 
@@ -12,6 +15,7 @@ var viewport_size: Vector2
 var score = 0
 var level = 1
 var blocks_dropped = 0
+var score_per_level = 100
 
 @onready var mask = $Mask
 @onready var bits = $Bits
@@ -22,6 +26,7 @@ var blocks_dropped = 0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	viewport_size = get_viewport().size
+	blocks.resize(size.x * size.y)
 	
 	for i in range(0, size.x):
 		var bit = bit_scene.instantiate()
@@ -42,14 +47,14 @@ func handle_input(location):
 		Input.action_press("move_right")
 			
 func _unhandled_input(event):
-	if event is InputEventScreenTouch:
-		if event.is_pressed():
-			handle_input(event.position.x)
+	if state == "Running":
+		if event is InputEventScreenTouch:
+			if event.is_pressed():
+				handle_input(event.position.x)
 
-	if event is InputEventMouseButton:
-		if event.is_pressed():
-			handle_input(event.position.x)
-		
+		if event is InputEventMouseButton:
+			if event.is_pressed():
+				handle_input(event.position.x)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -57,13 +62,9 @@ func _process(delta: float) -> void:
 		move(-1)
 	elif Input.is_action_just_pressed("move_right"):
 		move(1)
-		
-	move_bits(delta)
 	
 	$LevelValue.text = str(level)
 	$ScoreValue.text = str(score)
-	
-	pass
 
 func move(dx):
 	var bits = get_tree().get_nodes_in_group("bitmap")
@@ -77,11 +78,13 @@ func move(dx):
 			bit.position.x = bit_width * (size.x - 1)
 
 func _on_tick_timer_timeout() -> void:
-	add_block([true, false, true])
+	var length = randi_range(1, level)
+	var bits: Array[bool] = []
 	
-func move_bits(delta: float):
-	for bit in bits.get_children():
-		pass
+	for i in range(0, length):
+		bits.append(randi_range(0, 1) == 0)
+		
+	add_block(bits)
 	
 func add_block(pattern: Array[bool]):
 	blocks_dropped += 1
@@ -99,20 +102,19 @@ func add_block(pattern: Array[bool]):
 		
 	$Bits.add_child(block)
 	
-func add_bit():
-	var bit = bit_scene.instantiate()
-	bit.isOne = randf() > 0.5
-	bit.position.y = -bit_width
-	bit.position.x = randi_range(0, size.x - 1) * bit_width
-	
-	bits.add_child(bit)
+func update_score(amount):
+	if (state == "Running"):
+		score += amount
+		
+		level = floor(score / score_per_level) + 1
 	
 func _on_block_collide(block, block_bit, mask_bit):
 	sfx.play_hit()
 		
 	if (block_bit.isOne == mask_bit.isOne):
 		block_bit.queue_free()
-		score += 10
+		update_score(10)
+	
 	else:
 		block.isFalling = false
 		block.position.x = snapped(block.position.x, bit_width)
@@ -125,13 +127,18 @@ func _on_block_collide(block, block_bit, mask_bit):
 			bit.reparent($Mask)
 			
 		block.queue_free()
+		check_game_over()
 		
-		
-	#
-	#falling.add_to_group("bitmap")
-	#falling.remove_from_group("falling")
+func check_game_over():
+	for bit in get_tree().get_nodes_in_group('bitmap'):
+		if (bit.position.y > size.y * bit_width):
+			handle_game_over()
+			
+func handle_game_over():
+	state = "GameOver"
 	
-	#falling.isFalling = false
+func get_block(x: int, y: int):
+	return blocks[x + y * size.y]
 	
-	#falling.position.x = snapped(falling.position.x, bit_width)
-	#falling.position.y = snapped(falling.position.y, bit_width)
+func block(x: int, y: int, block: Node2D):
+	blocks[x + y * size.y] = block
