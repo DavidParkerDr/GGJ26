@@ -165,7 +165,7 @@ func _noise() -> float:
 	rng_state = int((1103515245 * rng_state + 12345) & 0x7fffffff)
 	var u: float = float(rng_state) / 2147483647.0
 	return (u * 2.0) - 1.0
-
+	
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey):
 		return

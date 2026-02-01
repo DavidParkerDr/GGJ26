@@ -22,6 +22,7 @@ var score_per_level = 100
 
 @onready var music := $MusicPayer
 @onready var sfx := $SfxPlayer
+@onready var jingle := $JinglePlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
