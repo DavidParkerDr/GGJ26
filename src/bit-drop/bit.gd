@@ -22,3 +22,5 @@ func _process(delta: float) -> void:
 		$ColorRect.color = Color("be252bdd")
 	elif operator == 'None':
 		$ColorRect.color = Color("4d7173dd")
+	elif operator == 'Mask':
+		$ColorRect.color = Color("081111eb")

@@ -16,13 +16,15 @@ block_scene = ExtResource("2_fos0i")
 bit_scene = ExtResource("2_r0du0")
 
 [node name="BG" type="ColorRect" parent="." unique_id=1703853073]
-offset_right = 399.0
-offset_bottom = 596.0
-scale = Vector2(1.7928231, 2.135674)
+anchors_preset = -1
+anchor_right = 0.6349206
+anchor_bottom = 0.5312499
+offset_right = 400.0
+offset_bottom = 600.0
+scale = Vector2(0.84, 1)
 mouse_filter = 1
 color = Color(0, 0, 0, 1)
 metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=14022925]
 position = Vector2(642, 165)
@@ -47,6 +49,7 @@ position = Vector2(45, 1135)
 position = Vector2(45, 135)
 
 [node name="AddBlockTimer" type="Timer" parent="." unique_id=575874012]
+wait_time = 2.0
 autostart = true
 
 [node name="GameoverTimer" type="Timer" parent="." unique_id=1349166563]

@@ -1,7 +1,8 @@
 extends Node2D
 
-var speed = 200
+var speed = 150
 var isFalling = true
+var escaped = false
 
 var operator = 'Equal'
 

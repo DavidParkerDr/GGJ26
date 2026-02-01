@@ -107,7 +107,7 @@ func update_falling_blocks(delta: float):
 		var next_canvas_pos = Vector2(block.position) + Vector2(0, delta * block.speed)
 		var next_grid_pos = canvas_position_to_grid(next_canvas_pos)
 		
-		if curr_grid_pos.y == next_grid_pos.y || curr_grid_pos.y == 0:
+		if block.escaped || curr_grid_pos.y == next_grid_pos.y || curr_grid_pos.y == 0:
 			block.position = next_canvas_pos
 			continue
 		
@@ -138,12 +138,16 @@ func update_falling_blocks(delta: float):
 				return r[1] != null && r[0].isOne == r[1].isOne
 		)
 		
+		var remove_block = true
+		
 		# If we're landing on the mask
 		if next_grid_pos.y == 0:
 			# If all the bits in the block match
 			if matching_bits.size() == bits_collided.size():
 				# Allow to fall through, increase score
 				update_score(10 * bits_collided.size())
+				remove_block = false
+				block.escaped = true
 			else:
 				for bit_idx in range(0, bits_collided.size()):
 					var bit = bits_collided[bit_idx][0]
@@ -154,14 +158,7 @@ func update_falling_blocks(delta: float):
 					bit.add_to_group("bitmap")
 					bit.remove_from_group("falling")
 					bit.operator = 'None'
-					bit.reparent($Mask)
-					
-			for bit_idx in range(0, bits_collided.size()):
-				var bits = bits_collided[bit_idx]
-				var falling_bit = bits[0]
-				var mask_bit = bits[1]
-				mask_bit.isOne = apply_operator(block.operator, falling_bit.isOne, mask_bit.isOne)
-				
+					bit.reparent($Mask)	
 		else:
 			# If all bits are either matching or non-colliding, remove matching,
 			# let non-colliding continue
@@ -172,8 +169,6 @@ func update_falling_blocks(delta: float):
 					
 					# Remove bit from map
 					remove_bit_from_map(bit[2])
-					
-				#update_score(10 * matching_bits.size())
 					
 				for bit in non_colliding:
 					var new_block = block_scene.instantiate();
@@ -202,7 +197,16 @@ func update_falling_blocks(delta: float):
 					bit.operator = 'None'
 					bit.reparent($Mask)
 					
-		block.queue_free()
+		for bit_idx in range(0, bits_collided.size()):
+			var bits = bits_collided[bit_idx]
+			var falling_bit = bits[0]
+			var hit_bit = bits[1]
+			
+			if hit_bit != null:
+				hit_bit.isOne = apply_operator(block.operator, falling_bit.isOne, hit_bit.isOne)
+		
+		if remove_block:
+			block.queue_free()
 		
 func move(dx):
 	var new_map: Array[Array] = []
@@ -348,7 +352,7 @@ func reset_map():
 		bit.position.x = i * bit_width
 		
 		bit.isOne = false
-		bit.operator = 'None'
+		bit.operator = 'Mask'
 		bit.add_to_group("bitmap")
 		bits_column[0] = bit
 		
