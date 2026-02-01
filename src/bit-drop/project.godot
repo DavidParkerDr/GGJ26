@@ -13,7 +13,12 @@ config_version=5
 config/name="Bit Drop"
 run/main_scene="uid://cyc30pt6xptps"
 config/features=PackedStringArray("4.6", "Mobile")
+boot_splash/image="uid://crjn4cmygh7o4"
 config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://dtjwt1m1hqgbv"
 
 [display]
 
