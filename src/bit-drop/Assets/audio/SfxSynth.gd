@@ -50,7 +50,7 @@ func _ready() -> void:
 		gen = stream as AudioStreamGenerator
 
 	gen.mix_rate = 44100
-	gen.buffer_length = 0.2
+	gen.buffer_length = 0.1
 	mix_rate = float(gen.mix_rate)
 
 	play()
