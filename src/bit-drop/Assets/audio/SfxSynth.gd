@@ -61,7 +61,7 @@ func play_hit() -> void:
 	hit_t = 0.0
 	hit_active = true
 
-func play_life_lost() -> void:
+func play_miss() -> void:
 	life_t = 0.0
 	life_active = true
 
@@ -165,7 +165,7 @@ func _noise() -> float:
 	rng_state = int((1103515245 * rng_state + 12345) & 0x7fffffff)
 	var u: float = float(rng_state) / 2147483647.0
 	return (u * 2.0) - 1.0
-
+	
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey):
 		return
@@ -179,8 +179,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			play_hit()
 			print("Hit")
 		KEY_W:
-			play_life_lost()
-			print("Life Lost")
+			play_miss()
+			print("Miss")
 		KEY_O:
 			play_game_over()
 			print("game over")

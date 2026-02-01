@@ -1,6 +1,7 @@
 extends Node2D
 
 var isOne = false
+var operator = 'Equal'
 
 @onready var label = $Label
 
@@ -14,3 +15,10 @@ func _process(delta: float) -> void:
 		label.text = "1"
 	else:
 		label.text = "0"
+		
+	if operator == 'Equal':
+		$ColorRect.color = Color('045604d2')
+	elif operator == 'NotEqual':
+		$ColorRect.color = Color("be252bdd")
+	elif operator == 'None':
+		$ColorRect.color = Color("4d7173dd")

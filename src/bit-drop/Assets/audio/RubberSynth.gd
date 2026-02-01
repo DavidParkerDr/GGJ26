@@ -206,9 +206,9 @@ func set_intensity(x: float) -> void:
 	var v: float = clamp(x, 0.0, 1.0)
 	if v < 0.2:
 		set_mood(Mood.INTRO)
-	elif v < 0.55:
+	elif v < 0.4:
 		set_mood(Mood.RELAXED)
-	elif v < 0.8:
+	elif v < 0.6:
 		set_mood(Mood.FRANTIC)
 	else:
 		set_mood(Mood.EXTREME)

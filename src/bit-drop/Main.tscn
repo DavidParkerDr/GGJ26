@@ -7,6 +7,7 @@
 [ext_resource type="Theme" uid="uid://264gdyjhaan4" path="res://Assets/default_theme.tres" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://b01wjiugrl32t" path="res://Assets/audio/RubberSynth.gd" id="5_3dxm6"]
 [ext_resource type="Script" uid="uid://dte7mkgm33hcf" path="res://Assets/audio/SfxSynth.gd" id="6_lgr22"]
+[ext_resource type="Script" uid="uid://b402bbf2lu0ce" path="res://Assets/audio/JingleSynth.gd" id="8_trn2v"]
 
 [node name="Main" type="Node" unique_id=1869880820]
 script = ExtResource("1_uu6xs")
@@ -44,8 +45,12 @@ position = Vector2(45, 1135)
 [node name="Bits" type="Node2D" parent="." unique_id=1314198084]
 position = Vector2(45, 135)
 
-[node name="TickTimer" type="Timer" parent="." unique_id=575874012]
+[node name="AddBlockTimer" type="Timer" parent="." unique_id=575874012]
 autostart = true
+
+[node name="GameoverTimer" type="Timer" parent="." unique_id=1349166563]
+wait_time = 5.0
+one_shot = true
 
 [node name="Label" type="Label" parent="." unique_id=1180464154]
 offset_left = 107.0
@@ -104,4 +109,25 @@ theme_override_font_sizes/font_size = 42
 text = "9999"
 horizontal_alignment = 2
 
-[connection signal="timeout" from="TickTimer" to="." method="_on_tick_timer_timeout"]
+[node name="JinglePlayer" type="AudioStreamPlayer" parent="." unique_id=976216354]
+script = ExtResource("8_trn2v")
+
+[node name="MessageLabel" type="Label" parent="." unique_id=1464919196]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -248.5
+offset_top = -98.5
+offset_right = 248.5
+offset_bottom = 98.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_cm0pq")
+theme_override_font_sizes/font_size = 81
+text = "Tap to start!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="timeout" from="AddBlockTimer" to="." method="_on_tick_timer_timeout"]
