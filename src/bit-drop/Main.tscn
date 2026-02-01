@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://264gdyjhaan4" path="res://Assets/default_theme.tres" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://b01wjiugrl32t" path="res://Assets/audio/RubberSynth.gd" id="5_3dxm6"]
 [ext_resource type="Script" uid="uid://dte7mkgm33hcf" path="res://Assets/audio/SfxSynth.gd" id="6_lgr22"]
-[ext_resource type="Script" uid="uid://b402bbf2lu0ce" path="res://Assets/audio/JingleSynth.gd" id="8_trn2v"]
+[ext_resource type="Script" path="res://Assets/audio/JingleSynth.gd" id="8_trn2v"]
 
 [node name="Main" type="Node" unique_id=1869880820]
 script = ExtResource("1_uu6xs")
@@ -106,7 +106,6 @@ text = "9999"
 horizontal_alignment = 2
 
 [node name="JinglePlayer" type="AudioStreamPlayer" parent="." unique_id=976216354]
-bus = &"Jingle"
 script = ExtResource("8_trn2v")
 
 [connection signal="timeout" from="TickTimer" to="." method="_on_tick_timer_timeout"]
