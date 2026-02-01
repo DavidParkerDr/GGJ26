@@ -147,7 +147,7 @@ func check_game_over():
 			
 func handle_game_over():
 	state = "GameOver"
-	jingle.play
+	jingle.play_game_over_sad()
 	
 func get_block(x: int, y: int):
 	return blocks[x + y * size.y]
