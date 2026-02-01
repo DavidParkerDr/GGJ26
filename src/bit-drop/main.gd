@@ -20,7 +20,7 @@ var score_per_level = 100
 @onready var mask = $Mask
 @onready var bits = $Bits
 
-@onready var music := $MusicPayer
+@onready var music := $MusicPlayer
 @onready var sfx := $SfxPlayer
 @onready var jingle := $JinglePlayer
 
@@ -106,6 +106,7 @@ func add_block(pattern: Array[bool]):
 func update_score(amount):
 	if (state == "Running"):
 		score += amount
+		music.set_intensity(score/100)
 		
 		level = floor(score / score_per_level) + 1
 	
