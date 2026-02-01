@@ -25,6 +25,61 @@ static func intro() -> SynthTrack:
 
 	return _normalize(t)
 
+static func splash() -> SynthTrack:
+	var t := SynthTrack.new()
+	t.name = "splash"
+	t.steps = 16
+
+	# Roots chosen for neutrality
+	t.root_midi_bass = 43   # G2 (unused, but set)
+	t.root_midi_mid  = 60   # C4
+	t.root_midi_treb = 72   # C5
+
+	# --- Bass (silent, just anchors harmony) ---
+	t.bass_note = _i([
+		-999,-999,-999,-999,
+		-999,-999,-999,-999,
+		-999,-999,-999,-999,
+		-999,-999,-999,-999
+	])
+	t.bass_acc = _i([0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0])
+	t.bass_sld = _i([0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0])
+
+	# --- Mid: slow C–E–G–E arpeggio ---
+	t.mid_note = _i([
+		0, -999, 4, -999,
+		7, -999, 4, -999,
+		0, -999, 4, -999,
+		7, -999, 4, -999
+	])
+	t.mid_acc = _i([
+		1,0, 0,0,
+		0,0, 0,0,
+		1,0, 0,0,
+		0,0, 0,0
+	])
+
+	# --- Treble: very occasional shimmer ---
+	t.treb_note = _i([
+		-999,-999,12,-999,
+		-999,-999,-999,-999,
+		-999,-999,12,-999,
+		-999,-999,-999,-999
+	])
+	t.treb_acc = _i([
+		0,0,1,0,
+		0,0,0,0,
+		0,0,1,0,
+		0,0,0,0
+	])
+
+	# --- No drums for splash screen ---
+	t.drum_tom = _i([0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0])
+	t.drum_cym = _i([0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0])
+	t.drum_cym_acc = _i([0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0])
+
+	return _normalize(t)
+
 static func relaxed() -> SynthTrack:
 	var t := SynthTrack.new()
 	t.name = "relaxed"

@@ -15,8 +15,8 @@ extends AudioStreamPlayer
 ##
 
 # ---------------- Track selection ----------------
-enum Mood { INTRO, RELAXED, FRANTIC, EXTREME }
-@export var start_mood: Mood = Mood.INTRO
+enum Mood { SPLASH,INTRO, RELAXED, FRANTIC, EXTREME }
+@export var start_mood: Mood = Mood.SPLASH
 
 enum SwapMode { NEXT_STEP, NEXT_BAR }
 @export var swap_mode: SwapMode = SwapMode.NEXT_BAR
@@ -128,6 +128,7 @@ var pending_track: SynthTrack = null
 @onready var track_relaxed: SynthTrack = TrackLibrary.relaxed()
 @onready var track_frantic: SynthTrack = TrackLibrary.frantic()
 @onready var track_extreme: SynthTrack = TrackLibrary.extreme()
+@onready var track_spash: SynthTrack = TrackLibrary.splash()
 
 # RNG
 var rng_state: int = 123456789
@@ -192,6 +193,8 @@ func set_track(track: SynthTrack) -> void:
 
 func set_mood(m: Mood) -> void:
 	match m:
+		Mood.SPLASH:
+			set_track(track_spash)
 		Mood.INTRO:
 			set_track(track_intro)
 		Mood.RELAXED:
@@ -244,6 +247,8 @@ func _ready() -> void:
 
 	# Pick start track
 	match start_mood:
+		Mood.SPLASH:
+			current_track = track_spash		
 		Mood.INTRO:
 			current_track = track_intro
 		Mood.RELAXED:
