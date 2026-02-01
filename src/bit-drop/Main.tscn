@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://b01wjiugrl32t" path="res://Assets/audio/RubberSynth.gd" id="5_3dxm6"]
 [ext_resource type="Script" uid="uid://dte7mkgm33hcf" path="res://Assets/audio/SfxSynth.gd" id="6_lgr22"]
 [ext_resource type="Script" uid="uid://b402bbf2lu0ce" path="res://Assets/audio/JingleSynth.gd" id="8_trn2v"]
+[ext_resource type="PackedScene" uid="uid://d7vj4fcd11bm" path="res://Splash.tscn" id="9_03owx"]
 
 [node name="Main" type="Node" unique_id=1869880820]
 script = ExtResource("1_uu6xs")
@@ -24,8 +25,8 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=14022925]
-position = Vector2(666.00006, 68)
-scale = Vector2(0.10517361, 0.1185744)
+position = Vector2(642, 165)
+scale = Vector2(0.06912482, 0.07793242)
 texture = ExtResource("2_cm0pq")
 
 [node name="PlayArea" type="ColorRect" parent="." unique_id=301627079]
@@ -130,4 +131,7 @@ text = "Tap to start!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Splash" parent="." unique_id=1410853433 instance=ExtResource("9_03owx")]
+
 [connection signal="timeout" from="AddBlockTimer" to="." method="_on_tick_timer_timeout"]
+[connection signal="SplashOver" from="Splash" to="." method="_on_splash_splash_over"]

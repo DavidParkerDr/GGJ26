@@ -6,6 +6,7 @@ extends Node
 const STATE_ATTRACT = 'Attract'
 const STATE_RUNNING = 'Running'
 const STATE_GAME_OVER = 'GameOver'
+const STATE_GAME_INTRO = 'Intro'
 
 const OPERATOR_EQUAL = 'Equal'
 const OPERATOR_NOT_EQUAL = 'NotEqual'
@@ -13,7 +14,7 @@ const OPERATOR_OR = 'Or'
 const OPERATOR_AND = 'And'
 const OPERATOR_XOR = 'Xor'
 
-var state = STATE_ATTRACT
+var state = STATE_GAME_INTRO
 
 var size = Vector2(10, 20)
 var bits_map: Array[Array] = []
@@ -55,14 +56,14 @@ func handle_input(location):
 		Input.action_press("start")
 			
 func _unhandled_input(event):
-	if state == STATE_RUNNING:
-		if event is InputEventScreenTouch:
-			if event.is_pressed():
-				handle_input(event.position.x)
+	
+	if event is InputEventScreenTouch:
+		if event.is_pressed():
+			handle_input(event.position.x)
 
-		if event is InputEventMouseButton:
-			if event.is_pressed():
-				handle_input(event.position.x)
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			handle_input(event.position.x)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -378,3 +379,8 @@ func apply_operator(operator: String, a: bool, b: bool) -> bool:
 		return (a || b) && !(a && b)
 		
 	return false
+
+
+func _on_splash_splash_over() -> void:
+	state = STATE_ATTRACT
+	$Splash.queue_free()
