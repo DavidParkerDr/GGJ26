@@ -207,7 +207,9 @@ func set_mood(m: Mood) -> void:
 # Optional: map 0..1 to a mood
 func set_intensity(x: float) -> void:
 	var v: float = clamp(x, 0.0, 1.0)
-	if v < 0.2:
+	if v<0:
+		set_mood(Mood.SPLASH)		
+	elif v < 0.2:
 		set_mood(Mood.INTRO)
 	elif v < 0.4:
 		set_mood(Mood.RELAXED)

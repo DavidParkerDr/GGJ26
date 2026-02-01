@@ -387,4 +387,5 @@ func apply_operator(operator: String, a: bool, b: bool) -> bool:
 
 func _on_splash_splash_over() -> void:
 	state = STATE_ATTRACT
+	music.set_intensity(-1)
 	$Splash.queue_free()
